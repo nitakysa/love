@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Для любимого</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #fcf6f0;
+      background-image: radial-gradient(circle at 10% 20%, #fce9e6 0%, #f8e1df 90%);
+      font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px 12px 40px;
+    }
+
+    .app {
+      max-width: 420px;
+      width: 100%;
+      background: rgba(255, 247, 242, 0.75);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      border-radius: 48px 48px 32px 32px;
+      box-shadow: 0 20px 40px rgba(190, 130, 120, 0.15),
+                  0 8px 16px rgba(200, 140, 130, 0.08);
+      padding: 28px 20px 32px;
+      border: 1px solid rgba(255, 230, 220, 0.5);
+      transition: all 0.2s ease;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      color: #8b5e5a;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: linear-gradient(135deg, #b47a74, #a06762);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+      padding: 0 12px;
+    }
+
+    .header::after {
+      content: "♡";
+      display: block;
+      font-size: 18px;
+      color: #dbb6b0;
+      margin-top: -6px;
+      letter-spacing: 4px;
+      -webkit-text-fill-color: #dbb6b0;
+    }
+
+    .photo-card {
+      background: rgba(255, 240, 235, 0.6);
+      border-radius: 60px 60px 40px 40px;
+      padding: 20px 14px 14px;
+      margin-bottom: 28px;
+      box-shadow: inset 0 2px 8px rgba(255, 220, 210, 0.3),
+                  0 12px 24px -8px rgba(160, 110, 100, 0.12);
+      border: 1px solid rgba(255, 215, 205, 0.4);
+    }
+
+    .photo-placeholder {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-height: 280px;
+      object-fit: cover;
+      border-radius: 40px;
+      display: block;
+      background: #f5e3de;
+      box-shadow: 0 4px 12px rgba(150, 100, 90, 0.08);
+      margin: 0 auto;
+      border: 2px solid rgba(255, 235, 225, 0.7);
+    }
+
+    .photo-placeholder.error {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #f1ded9, #faeae6);
+      color: #a08078;
+      font-size: 18px;
+      font-family: 'Georgia', serif;
+      text-align: center;
+      padding: 20px;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .photo-placeholder.error::before {
+      content: "📸";
+      font-size: 48px;
+      display: block;
+    }
+
+    .photo-placeholder.error::after {
+      content: "Боря и я";
+      font-size: 20px;
+      color: #7a5c58;
+    }
+
+    .photo-caption {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 16px;
+      font-weight: 300;
+      color: #7a5c58;
+      letter-spacing: 0.3px;
+      background: rgba(255, 235, 225, 0.5);
+      padding: 6px 14px;
+      border-radius: 40px;
+      display: inline-block;
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      border: 1px solid rgba(255, 215, 205, 0.3);
+    }
+
+    .photo-caption i {
+      font-style: normal;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .photo-caption i::before {
+      content: "✿";
+      opacity: 0.6;
+      margin-right: 4px;
+    }
+
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px 10px;
+      margin-top: 12px;
+      margin-bottom: 12px;
+    }
+
+    .day-btn {
+      background: rgba(255, 240, 235, 0.7);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      border: 1px solid rgba(220, 180, 170, 0.3);
+      border-radius: 60px;
+      padding: 12px 0;
+      font-size: 16px;
+      font-weight: 400;
+      color: #6d4f4b;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(180, 130, 120, 0.05);
+      transition: all 0.15s ease;
+      cursor: pointer;
+      background: rgba(255, 245, 240, 0.6);
+      letter-spacing: 0.5px;
+      font-family: 'Segoe UI', 'Roboto', sans-serif;
+      line-height: 1.2;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .day-btn:active {
+      transform: scale(0.94);
+      background: rgba(230, 200, 190, 0.5);
+      border-color: #c9a69e;
+      box-shadow: 0 2px 4px rgba(160, 110, 100, 0.1);
+    }
+
+    .footnote {
+      text-align: center;
+      margin-top: 28px;
+      font-size: 13px;
+      color: #b1938c;
+      letter-spacing: 0.3px;
+      border-top: 1px solid rgba(210, 175, 165, 0.2);
+      padding-top: 18px;
+    }
+
+    /* ===== МОДАЛЬНОЕ ОКНО ===== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(40, 25, 22, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 999;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-content {
+      background: #fcf3ef;
+      border-radius: 48px;
+      max-width: 420px;
+      width: 100%;
+      max-height: 90vh;
+      padding: 24px 20px 28px;
+      box-shadow: 0 30px 60px rgba(80, 50, 45, 0.3);
+      border: 1px solid rgba(255, 225, 215, 0.4);
+      animation: slideUp 0.35s ease;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      font-size: 28px;
+      background: rgba(220, 185, 175, 0.3);
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #7a5c58;
+      cursor: pointer;
+      transition: all 0.2s;
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+
+    .modal-close:active {
+      transform: scale(0.9);
+      background: rgba(200, 160, 150, 0.4);
+    }
+
+    .modal-title {
+      font-size: 22px;
+      font-weight: 400;
+      color: #7a5c58;
+      text-align: center;
+      margin-bottom: 18px;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      letter-spacing: 1px;
+      padding-right: 20px;
+    }
+
+    .modal-title span {
+      background: #e6cfc7;
+      padding: 2px 16px;
+      border-radius: 40px;
+      font-size: 14px;
+      color: #5d413d;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .modal-gallery {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .modal-gallery .gallery-item {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 24px;
+      object-fit: cover;
+      background: #f5e3de;
+      background-image: linear-gradient(145deg, #f1ded9, #faeae6);
+      border: 2px solid rgba(255, 235, 225, 0.5);
+      box-shadow: 0 4px 10px rgba(150, 100, 90, 0.06);
+    }
+
+    .modal-gallery .gallery-item.coupon-large {
+      aspect-ratio: 4 / 3;
+      max-height: 280px;
+      object-fit: contain;
+      background: #fcf3ef;
+      border: 2px dashed #dbbcb2;
+      padding: 8px;
+    }
+
+    .modal-gallery.hidden {
+      display: none;
+    }
+
+    .modal-message {
+      background: rgba(255, 240, 235, 0.5);
+      border-radius: 28px;
+      padding: 16px 18px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #4f3b38;
+      text-align: center;
+      border: 1px solid rgba(255, 215, 205, 0.2);
+      min-height: 50px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .modal-message .coupon-badge {
+      display: inline-block;
+      background: #e9d3cb;
+      padding: 4px 16px;
+      border-radius: 60px;
+      font-size: 14px;
+      color: #4d3531;
+      border: 1px solid #dbbcb2;
+      margin-top: 8px;
+    }
+
+    .modal-message.hidden-message {
+      display: none;
+    }
+
+    /* ===== ПЛЕЙЛИСТ ===== */
+    .playlist-container {
+      margin: 8px 0 16px;
+    }
+
+    .playlist-intro {
+      font-size: 15px;
+      color: #6d4f4b;
+      background: linear-gradient(135deg, rgba(255, 240, 235, 0.7), rgba(248, 225, 223, 0.5));
+      padding: 14px 16px;
+      border-radius: 28px;
+      margin-bottom: 16px;
+      line-height: 1.6;
+      text-align: center;
+      border: 1px solid rgba(200, 165, 155, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .playlist-intro::before {
+      content: "♪";
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
+      opacity: 0.15;
+      color: #b47a74;
+    }
+
+    .playlist-intro::after {
+      content: "♫";
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
+      opacity: 0.15;
+      color: #b47a74;
+    }
+
+    .playlist-track {
+      background: rgba(255, 248, 245, 0.8);
+      border-radius: 20px;
+      padding: 14px 18px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(200, 165, 155, 0.12);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 8px rgba(180, 130, 120, 0.04);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .playlist-track::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, #b47a74, #dbbcb2);
+      border-radius: 0 4px 4px 0;
+      opacity: 0.5;
+    }
+
+    .playlist-track:active {
+      transform: scale(0.98);
+      background: rgba(255, 240, 235, 0.6);
+      border-color: rgba(200, 165, 155, 0.3);
+    }
+
+    .playlist-track .track-number {
+      font-size: 13px;
+      font-weight: 600;
+      color: #dbbcb2;
+      min-width: 28px;
+      text-align: center;
+      font-feature-settings: "tnum";
+    }
+
+    .playlist-track .track-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .playlist-track .track-link {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .playlist-track .track-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #4f3b38;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .playlist-track .track-name:hover {
+      color: #b47a74;
+    }
+
+    .playlist-track .track-name .play-icon {
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.2s;
+      color: #1DB954;
+    }
+
+    .playlist-track:hover .track-name .play-icon {
+      opacity: 1;
+    }
+
+    .playlist-track .track-artist {
+      font-size: 13px;
+      color: #a08078;
+      margin-top: 2px;
+    }
+
+    .playlist-track .track-emoji {
+      font-size: 26px;
+      min-width: 40px;
+      text-align: center;
+      opacity: 0.7;
+    }
+
+    .playlist-track .track-meta {
+      font-size: 12px;
+      color: #c9b5ae;
+      font-feature-settings: "tnum";
+      text-align: right;
+      min-width: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+
+    .playlist-track .track-year {
+      font-size: 11px;
+      color: #dccac5;
+    }
+
+    .playlist-spotify-badge {
+      display: inline-block;
+      background: #1DB954;
+      color: white;
+      font-size: 10px;
+      padding: 1px 10px;
+      border-radius: 40px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .playlist-footer {
+      text-align: center;
+      margin-top: 16px;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: #8b6b65;
+      background: rgba(255, 240, 235, 0.4);
+      border-radius: 24px;
+      border: 1px dashed rgba(200, 165, 155, 0.25);
+      font-style: italic;
+      letter-spacing: 0.5px;
+    }
+
+    .playlist-footer .heart {
+      color: #e07a7a;
+      animation: pulse 1.5s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    /* ===== ВИКТОРИНА ===== */
+    .quiz-container {
+      margin: 8px 0 16px;
+    }
+
+    .quiz-intro {
+      font-size: 15px;
+      color: #6d4f4b;
+      background: linear-gradient(135deg, rgba(255, 240, 235, 0.7), rgba(248, 225, 223, 0.5));
+      padding: 14px 16px;
+      border-radius: 28px;
+      margin-bottom: 16px;
+      line-height: 1.6;
+      text-align: center;
+      border: 1px solid rgba(200, 165, 155, 0.2);
+    }
+
+    .quiz-question {
+      background: rgba(255, 248, 245, 0.8);
+      border-radius: 20px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(200, 165, 155, 0.12);
+      box-shadow: 0 2px 8px rgba(180, 130, 120, 0.04);
+      transition: all 0.3s ease;
+    }
+
+    .quiz-question .q-number {
+      font-size: 13px;
+      font-weight: 600;
+      color: #dbbcb2;
+      margin-bottom: 4px;
+    }
+
+    .quiz-question .q-text {
+      font-size: 16px;
+      font-weight: 500;
+      color: #4f3b38;
+      margin-bottom: 10px;
+    }
+
+    .quiz-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .quiz-options .q-option {
+      background: rgba(255, 245, 240, 0.6);
+      border: 2px solid rgba(200, 165, 155, 0.15);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: #4f3b38;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      font-family: inherit;
+      background: #fcf6f0;
+    }
+
+    .quiz-options .q-option:active {
+      transform: scale(0.95);
+    }
+
+    .quiz-options .q-option.correct {
+      border-color: #4caf50;
+      background: #e8f5e9;
+      color: #2e7d32;
+      cursor: default;
+    }
+
+    .quiz-options .q-option.wrong {
+      border-color: #f44336;
+      background: #ffebee;
+      color: #c62828;
+      cursor: default;
+    }
+
+    .quiz-options .q-option:disabled {
+      cursor: default;
+      opacity: 0.7;
+    }
+
+    .quiz-options .q-option.show-correct {
+      border-color: #4caf50;
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .quiz-result {
+      text-align: center;
+      margin-top: 16px;
+      padding: 16px 18px;
+      border-radius: 28px;
+      font-size: 16px;
+      line-height: 1.6;
+      background: rgba(255, 248, 245, 0.6);
+      border: 1px solid rgba(200, 165, 155, 0.12);
+    }
+
+    .quiz-result .score {
+      font-size: 28px;
+      font-weight: 600;
+      color: #b47a74;
+    }
+
+    .quiz-result .final-message {
+      margin-top: 8px;
+      font-size: 17px;
+      color: #4f3b38;
+    }
+
+    .quiz-result .final-message .heart-big {
+      font-size: 28px;
+      display: block;
+      margin-top: 6px;
+    }
+
+    .quiz-reset-btn {
+      background: rgba(200, 165, 155, 0.25);
+      border: none;
+      border-radius: 40px;
+      padding: 8px 20px;
+      font-size: 13px;
+      color: #7a5c58;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: all 0.2s;
+      font-family: inherit;
+      display: inline-block;
+    }
+
+    .quiz-reset-btn:active {
+      transform: scale(0.95);
+      background: rgba(200, 165, 155, 0.45);
+    }
+
+    /* ===== ИГРА-КВЕСТ ===== */
+    .game-container {
+      margin: 8px 0 16px;
+      text-align: center;
+    }
+
+    .game-quest-text {
+      font-size: 15px;
+      color: #6d4f4b;
+      background: rgba(255, 240, 235, 0.6);
+      padding: 14px 16px;
+      border-radius: 28px;
+      margin-bottom: 16px;
+      line-height: 1.6;
+      border: 1px solid rgba(200, 165, 155, 0.2);
+    }
+
+    .game-quest-text .princess-name {
+      color: #b47a74;
+      font-weight: 600;
+    }
+
+    .game-quest-text .prince-name {
+      color: #8b6b65;
+      font-weight: 600;
+    }
+
+    .game-tasks {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .game-task {
+      background: rgba(255, 245, 240, 0.7);
+      border-radius: 20px;
+      padding: 14px 16px;
+      border: 2px solid rgba(200, 165, 155, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+      min-height: 56px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .game-task.done {
+      border-color: #b8a09a;
+      background: rgba(230, 210, 200, 0.3);
+      opacity: 0.75;
+    }
+
+    .game-task.done .task-label {
+      text-decoration: line-through;
+      color: #a08078;
+    }
+
+    .game-task .task-label {
+      font-size: 14px;
+      color: #4f3b38;
+      text-align: left;
+      flex: 1;
+      padding-right: 8px;
+      line-height: 1.3;
+      min-width: 120px;
+    }
+
+    .game-task .task-status {
+      font-size: 22px;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    .game-task .task-btn {
+      background: rgba(200, 165, 155, 0.25);
+      border: none;
+      border-radius: 40px;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: #6d4f4b;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      white-space: nowrap;
+      min-width: 60px;
+    }
+
+    .game-task .task-btn:active {
+      transform: scale(0.94);
+    }
+
+    .game-task .task-btn:disabled {
+      opacity: 0.3;
+      cursor: default;
+      transform: none;
+    }
+
+    .game-task .task-btn.completed {
+      background: #dbbcb2;
+      color: #fff;
+    }
+
+    .game-progress {
+      font-size: 14px;
+      color: #7a5c58;
+      background: rgba(255, 240, 235, 0.5);
+      padding: 6px 16px;
+      border-radius: 40px;
+      display: inline-block;
+      margin: 4px 0 10px;
+    }
+
+    .game-win-message {
+      background: linear-gradient(135deg, #fce9e6, #f8e1df);
+      border: 2px solid #dbbcb2;
+      border-radius: 28px;
+      padding: 18px 20px;
+      margin-top: 14px;
+      animation: fadeIn 0.6s ease;
+      font-size: 17px;
+      line-height: 1.6;
+      color: #5d413d;
+      font-weight: 500;
+    }
+
+    .game-win-message .princess-icon {
+      font-size: 32px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .game-reset-btn {
+      background: rgba(200, 165, 155, 0.25);
+      border: none;
+      border-radius: 40px;
+      padding: 8px 20px;
+      font-size: 13px;
+      color: #7a5c58;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .game-reset-btn:active {
+      transform: scale(0.95);
+      background: rgba(200, 165, 155, 0.45);
+    }
+
+    .game-footer-note {
+      margin-top: 16px;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: #8b6b65;
+      background: rgba(255, 240, 235, 0.4);
+      border-radius: 24px;
+      border: 1px dashed rgba(200, 165, 155, 0.25);
+      font-style: italic;
+      letter-spacing: 0.3px;
+    }
+
+    .modal-content::-webkit-scrollbar {
+      width: 4px;
+    }
+    .modal-content::-webkit-scrollbar-track {
+      background: rgba(200, 170, 160, 0.1);
+      border-radius: 10px;
+    }
+    .modal-content::-webkit-scrollbar-thumb {
+      background: #dbbcb2;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 380px) {
+      .app { padding: 18px 12px 24px; }
+      .days-grid { gap: 8px; }
+      .day-btn { font-size: 14px; padding: 10px 0; min-height: 42px; }
+      .modal-gallery { gap: 8px; }
+      .game-task { padding: 10px 12px; }
+      .game-task .task-label { font-size: 13px; min-width: 80px; }
+      .game-task .task-btn { font-size: 12px; padding: 4px 12px; min-width: 50px; }
+      .playlist-track { padding: 12px 14px; gap: 10px; }
+      .playlist-track .track-name { font-size: 14px; }
+      .playlist-track .track-artist { font-size: 12px; }
+      .playlist-track .track-emoji { font-size: 22px; min-width: 32px; }
+      .playlist-track .track-meta { min-width: 40px; }
+      .quiz-options { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <div class="header">
+      <h1>Для любимого</h1>
+    </div>
+
+    <div class="photo-card">
+      <img class="photo-placeholder" id="mainPhoto" src="images/боря_и_я.jpg" alt="Боря и я">
+      <div class="photo-caption">
+        <i>каждый день с тобой</i>
+      </div>
+    </div>
+
+    <div class="days-grid" id="daysGrid">
+      <button class="day-btn" data-day="1">день 1</button>
+      <button class="day-btn" data-day="2">день 2</button>
+      <button class="day-btn" data-day="3">день 3</button>
+      <button class="day-btn" data-day="4">день 4</button>
+      <button class="day-btn" data-day="5">день 5</button>
+      <button class="day-btn" data-day="6">день 6</button>
+      <button class="day-btn" data-day="7">день 7</button>
+      <button class="day-btn" data-day="8">день 8</button>
+      <button class="day-btn" data-day="9">день 9</button>
+      <button class="day-btn" data-day="10">день 10</button>
+    </div>
+
+    <div class="footnote">♡ нажми на день — откроется сюрприз ♡</div>
+  </div>
+
+  <!-- ===== МОДАЛЬНОЕ ОКНО ===== -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content" id="modalContent">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div class="modal-title" id="modalTitle">день 1 <span>наша история</span></div>
+      <div class="modal-gallery" id="modalGallery"></div>
+      <div id="modalExtra"></div>
+      <div class="modal-message" id="modalMessage">
+        ✧ здесь будет твоя надпись ✧
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // =============================================
+      // 1. ОБРАБОТКА ОШИБКИ ЗАГРУЗКИ ФОТО
+      // =============================================
+      const mainPhoto = document.getElementById('mainPhoto');
+
+      mainPhoto.onerror = function() {
+        this.classList.add('error');
+        this.src = '';
+        console.log('📸 Фото не найдено. Проверь путь: images/боря_и_я.jpg');
+      };
+
+      // =============================================
+      // 2. ДАННЫЕ ДНЕЙ
+      // =============================================
+      const daysData = {
+        1: {
+          title: 'день 1',
+          photos: [
+            'images/боря_и_я.jpg',
+            'images/мили.jpg',
+            'images/бро.jpg',
+            'images/куп.jpg'
+          ],
+          message: '✨ Этот сайт создан для того, чтобы ты не скучал 10 дней и мог еще раз вспомнить про наши моменты и не только. ✨'
+        },
+        2: {
+          title: 'день 2',
+          photos: [
+            'images/инт.jpg',
+            'images/мозг.jpg'
+          ],
+          message: '✨ Сегодня будут интересные факты, вроде ненужные, но правда интересные.\n\n🐘 Слоны и люди — единственные млекопитающие, которые могут стоять на голове.\n🦒 Когда европейцы впервые увидели жирафа, они назвали его верблюдопардом, решив, что это гибрид верблюда и леопарда.\n🦡 Крот может за одну ночь прорыть тоннель длиной в 76 метров.\n🐊 Крокодилы глотают камни, чтобы глубже нырнуть.\n🐌 У улитки около 25 000 зубов.\n✈️ Во время полета в самолете скорость роста волос у человека удваивается.\n🧴 Каждые 27 дней Вы буквально меняете кожу.\n💨 Кашель — взрывной заряд воздуха, который движется со скоростью до 60 миль/ч.\n⚡ Нервный импульс из мозга движется со скоростью 274 км/ч. ✨'
+        },
+        3: {
+          title: 'день 3',
+          photos: [
+            'images/бор.jpg',
+            'images/нав.jpg',
+            'images/хтх.jpg'
+          ],
+          message: '✨ Наши смешные фотки, которые мне очень нравятся. Мне всегда смешно с тобой, ващеее очень круто. Мне нравится как ты переделываешь песни, когда ты что-то говоришь и такое "ну ладно я пошел", когда ты дурачишься, то прыгаешь на меня, то начинаешь танцевать. Мне всегда хорошо с тобой и всегда будет хорошо. Я тебя безумно люблю! ✨'
+        },
+        4: {
+          title: 'день 4',
+          photos: [
+            'images/купон.jpg'
+          ],
+          message: '✨ Сюрприз! Это купон на много много поцелуев. Ты можешь и без этого купона меня целовать сколько влезет, но что-то забавное и милое мне захотелось добавить. ✨',
+          isCoupon: true
+        },
+        5: {
+          title: 'день 5',
+          photos: [
+            'images/борик1.jpg',
+            'images/борик2.jpg',
+            'images/борик3.jpg',
+            'images/борик4.jpg'
+          ],
+          message: '✨ Я очень люблю тебя фоткать — либо со стороны, либо просто так. Для меня ты очень смешной и красивый. Я всегда хочу запечатлеть момент с тобой, не важно, фото это или видео. Иногда тебе не нравится, что я направляю на тебя камеру, ты говоришь: «Я для тебя это делаю, зачем снимать?» А я хочу пересматривать фото или видео с тобой, когда ты далеко и я безумно скучаю. Я ценю каждый момент и помню его, но иногда мне хочется, смотря на видео, вспомнить его ещё раз. ✨'
+        },
+        6: {
+          title: 'день 6',
+          photos: [
+            'images/кит.jpg',
+            'images/нота.jpg'
+          ],
+          message: '🎵 Я очень люблю музыку, каждый раз я ассоциирую людей и музыку. С тобой у меня ассоциируются эти треки ✨',
+          isPlaylist: true
+        },
+        7: {
+          title: 'день 7',
+          photos: [],
+          message: '',
+          isQuest: true
+        },
+        8: {
+          title: 'день 8',
+          photos: [
+            'images/купон2.jpg'
+          ],
+          message: '✨ Тадам! Еще один купон, который ты можешь потратить как ты хочешь. ✨',
+          isCoupon: true
+        },
+        9: {
+          title: 'день 9',
+          photos: [
+            'images/сон.jpg',
+            'images/пальм.jpg',
+            'images/прж.jpg',
+            'images/кон.jpg'
+          ],
+          message: '✨ Время помечтать. Куда бы мы хотели бы еще слетать? Мне было бы интересно услышать от тебя. Я бы хотела в Италию, Францию и Швецию. Хотя, я бы полетела с тобой куда угодно! Главное с тобой) Я знаю, что мы облетим много стран, будем добиваться всего вместе! Многого добьемся и многое увидим. ✨'
+        },
+        10: {
+          title: 'день 10',
+          photos: [
+            'images/Викторина.jpg'
+          ],
+          message: '🧠 Проверь, как хорошо ты меня помнишь!',
+          isQuiz: true
+        }
+      };
+
+      // =============================================
+      // 3. ДАННЫЕ ПЛЕЙЛИСТА
+      // =============================================
+      const playlistTracks = [
+        {
+          name: 'Ain\'t No Sunshine',
+          artist: 'Bill Withers',
+          url: 'https://open.spotify.com/track/1k1Bqnv2R0uJXQN4u6LKYt?si=c27836e14a184765',
+          emoji: '🌤️',
+          year: '1971',
+          duration: '2:06'
+        },
+        {
+          name: 'Parado no Bailão',
+          artist: 'MC LdaVinte',
+          url: 'https://open.spotify.com/track/3Hb9kUdm4yf839Fle4RIdT?si=caafc1892786419f',
+          emoji: '🎶',
+          year: '2018',
+          duration: '2:51'
+        },
+        {
+          name: 'Rolling Stoner',
+          artist: 'Thomas Mraz',
+          url: 'https://open.spotify.com/track/4MsAKdDFruaxZsxbbRnoZW?si=56824a2f38974396',
+          emoji: '🌊',
+          year: '2016',
+          duration: '3:03'
+        },
+        {
+          name: 'Alvaro',
+          artist: 'Lewis Del Mar',
+          url: 'https://open.spotify.com/track/1Hv1VTm8zeOeybub15mA2R?si=95e03e7d42134edb',
+          emoji: '🎸',
+          year: '2021',
+          duration: '4:02'
+        },
+        {
+          name: 'Lost',
+          artist: 'Santé Rose',
+          url: 'https://open.spotify.com/track/1vrKQCmUwNbxOG2RKJodaP?si=91c5487378bb41d1',
+          emoji: '💫',
+          year: '2022',
+          duration: '2:20'
+        },
+        {
+          name: 'Bonnie & Clyde',
+          artist: 'DEAN, G.Soul',
+          url: 'https://open.spotify.com/track/4Tyb1yqPkrVI5hyudVc0QW?si=b4316550a3614980',
+          emoji: '💕',
+          year: '—',
+          duration: '4:42'
+        }
+      ];
+
+      // =============================================
+      // 4. ДАННЫЕ ВИКТОРИНЫ
+      // =============================================
+      const quizQuestions = [
+        {
+          question: 'Какого числа мы познакомились?',
+          options: ['25 января', '26 января', '27 января', '28 января'],
+          correct: 1
+        },
+        {
+          question: 'Какого цвета у меня были волосы, когда мы познакомились?',
+          options: ['Тёмные', 'Рыжие', 'Светлые', 'Чёрные'],
+          correct: 2
+        },
+        {
+          question: 'Какой у меня был айфон, когда мы познакомились?',
+          options: ['11 Pro', '12 Pro Max', '13 Pro', '14 Pro'],
+          correct: 1
+        },
+        {
+          question: 'Какого цвета у меня глаза?',
+          options: ['Карие', 'Зелёные', 'Голубые', 'Серые'],
+          correct: 1
+        },
+        {
+          question: 'Как звали мою первую кошку?',
+          options: ['Муся', 'Барсик', 'Маруся', 'Соня'],
+          correct: 2
+        }
+      ];
+
+      // =============================================
+      // 5. ЭЛЕМЕНТЫ
+      // =============================================
+      const modalOverlay = document.getElementById('modalOverlay');
+      const modalClose = document.getElementById('modalClose');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalGallery = document.getElementById('modalGallery');
+      const modalMessage = document.getElementById('modalMessage');
+      const modalExtra = document.getElementById('modalExtra');
+      const dayButtons = document.querySelectorAll('.day-btn');
+
+      // =============================================
+      // 6. КВЕСТ ДЛЯ 7 ДНЯ
+      // =============================================
+      let questState = {
+        tasks: [
+          {
+            id: 0,
+            label: '📸 Прислать принцессе фото прямо сейчас',
+            done: false,
+            hint: 'Открой галерею и выбери красивое фото для Ники!'
+          },
+          {
+            id: 1,
+            label: '💌 Написать принцессе, что он любит её',
+            done: false,
+            hint: 'Напиши ей тёплые слова в мессенджере!'
+          },
+          {
+            id: 2,
+            label: '🐶 Найти картинку таксы или стикер и отправить Нике',
+            done: false,
+            hint: 'Найди забавную таксу и порадуй принцессу!'
+          }
+        ],
+        allDone: false
+      };
+
+      function renderQuest(container) {
+        container.innerHTML = '';
+
+        const intro = document.createElement('div');
+        intro.className = 'game-quest-text';
+        intro.innerHTML = `
+          🏰 <span class="princess-name">Принцесса Ника</span> очень грустит и ждёт,
+          когда <span class="prince-name">принц Борис</span> наконец-то прискачет к ней во дворец,
+          но для этого принцу надо выполнить три задания.
+        `;
+        container.appendChild(intro);
+
+        const tasksContainer = document.createElement('div');
+        tasksContainer.className = 'game-tasks';
+        tasksContainer.id = 'questTasks';
+
+        questState.tasks.forEach((task) => {
+          const taskEl = document.createElement('div');
+          taskEl.className = 'game-task' + (task.done ? ' done' : '');
+          taskEl.dataset.taskId = task.id;
+
+          const label = document.createElement('span');
+          label.className = 'task-label';
+          label.textContent = task.label;
+
+          const status = document.createElement('span');
+          status.className = 'task-status';
+          status.textContent = task.done ? '✅' : '⬜';
+
+          const btn = document.createElement('button');
+          btn.className = 'task-btn' + (task.done ? ' completed' : '');
+          btn.textContent = task.done ? 'сделано' : 'сделать!';
+          btn.disabled = task.done;
+          btn.dataset.taskId = task.id;
+
+          btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            const id = parseInt(this.dataset.taskId, 10);
+            const taskData = questState.tasks.find(t => t.id === id);
+            if (taskData && !taskData.done) {
+              const hint = document.createElement('div');
+              hint.style.cssText = `
+                font-size: 13px; color: #8b6b65; background: rgba(255,240,235,0.5);
+                padding: 6px 12px; border-radius: 16px; margin-top: 4px;
+                animation: fadeIn 0.3s ease; width: 100%;
+              `;
+              hint.textContent = '💡 ' + taskData.hint;
+
+              const existingHint = taskEl.querySelector('div');
+              if (existingHint) existingHint.remove();
+              taskEl.appendChild(hint);
+              setTimeout(() => {
+                if (hint.parentNode) hint.remove();
+              }, 3500);
+            }
+            completeTask(id, container);
+          });
+
+          taskEl.appendChild(label);
+          taskEl.appendChild(status);
+          taskEl.appendChild(btn);
+          tasksContainer.appendChild(taskEl);
+        });
+
+        container.appendChild(tasksContainer);
+
+        const progress = document.createElement('div');
+        progress.className = 'game-progress';
+        progress.id = 'questProgress';
+        const doneCount = questState.tasks.filter(t => t.done).length;
+        progress.textContent = `👑 ${doneCount} / 3 заданий выполнено`;
+        container.appendChild(progress);
+
+        const resetBtn = document.createElement('button');
+        resetBtn.className = 'game-reset-btn';
+        resetBtn.textContent = '🔄 начать заново';
+        resetBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          resetQuest(container);
+        });
+        container.appendChild(resetBtn);
+
+        const footerNote = document.createElement('div');
+        footerNote.className = 'game-footer-note';
+        footerNote.textContent = '🌸 Это небольшой интерактив, чтобы было веселей на 7 день';
+        container.appendChild(footerNote);
+
+        if (questState.allDone) {
+          const win = document.createElement('div');
+          win.className = 'game-win-message';
+          win.innerHTML = `
+            <span class="princess-icon">👸</span>
+            🎉 <strong>Ты молодец!</strong><br>
+            Принцесса уже не так сильно грустит и ждёт принца в замке. 🏰
+          `;
+          container.insertBefore(win, footerNote);
+        }
+      }
+
+      function completeTask(taskId, container) {
+        const task = questState.tasks.find(t => t.id === taskId);
+        if (!task || task.done) return;
+
+        const taskEl = container.querySelector(`.game-task[data-task-id="${taskId}"]`);
+        if (taskEl) {
+          taskEl.style.transform = 'scale(0.96)';
+          taskEl.style.borderColor = '#dbbcb2';
+          setTimeout(() => {
+            taskEl.style.transform = 'scale(1)';
+          }, 200);
+        }
+
+        task.done = true;
+
+        const doneCount = questState.tasks.filter(t => t.done).length;
+        const progress = document.getElementById('questProgress');
+        if (progress) {
+          progress.textContent = `👑 ${doneCount} / 3 заданий выполнено`;
+        }
+
+        const tasksContainer = document.getElementById('questTasks');
+        if (tasksContainer) {
+          const allTasks = tasksContainer.querySelectorAll('.game-task');
+          allTasks.forEach(el => {
+            const id = parseInt(el.dataset.taskId, 10);
+            const taskData = questState.tasks.find(t => t.id === id);
+            if (taskData) {
+              if (taskData.done) {
+                el.classList.add('done');
+                const status = el.querySelector('.task-status');
+                if (status) status.textContent = '✅';
+                const btn = el.querySelector('.task-btn');
+                if (btn) {
+                  btn.textContent = 'сделано';
+                  btn.disabled = true;
+                  btn.classList.add('completed');
+                }
+                const hints = el.querySelectorAll('div');
+                hints.forEach(h => {
+                  if (h.style && h.style.animation) h.remove();
+                });
+              }
+            }
+          });
+        }
+
+        if (doneCount === 3) {
+          questState.allDone = true;
+          const existingWin = container.querySelector('.game-win-message');
+          if (!existingWin) {
+            const win = document.createElement('div');
+            win.className = 'game-win-message';
+            win.innerHTML = `
+              <span class="princess-icon">👸</span>
+              🎉 <strong>Ты молодец!</strong><br>
+              Принцесса уже не так сильно грустит и ждёт принца в замке. 🏰
+            `;
+            const footer = container.querySelector('.game-footer-note');
+            if (footer) {
+              container.insertBefore(win, footer);
+            } else {
+              container.appendChild(win);
+            }
+          }
+        }
+      }
+
+      function resetQuest(container) {
+        questState.tasks.forEach(t => t.done = false);
+        questState.allDone = false;
+        renderQuest(container);
+      }
+
+      // =============================================
+      // 7. ОТРИСОВКА ПЛЕЙЛИСТА
+      // =============================================
+      function renderPlaylist(container) {
+        container.innerHTML = '';
+
+        const intro = document.createElement('div');
+        intro.className = 'playlist-intro';
+        intro.innerHTML = `
+          🎵 С тобой у меня ассоциируются эти треки.<br>
+          <span style="font-size:13px; color:#a08078;">Каждый раз, когда я их слышу — я думаю о тебе ❤️</span>
+        `;
+        container.appendChild(intro);
+
+        playlistTracks.forEach((track, index) => {
+          const trackEl = document.createElement('div');
+          trackEl.className = 'playlist-track';
+
+          const number = document.createElement('span');
+          number.className = 'track-number';
+          number.textContent = String(index + 1).padStart(2, '0');
+
+          const emoji = document.createElement('span');
+          emoji.className = 'track-emoji';
+          emoji.textContent = track.emoji;
+
+          const info = document.createElement('div');
+          info.className = 'track-info';
+
+          const link = document.createElement('a');
+          link.className = 'track-link';
+          link.href = track.url;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+
+          const name = document.createElement('div');
+          name.className = 'track-name';
+          name.innerHTML = `
+            ${track.name}
+            <span class="play-icon">▶</span>
+            <span class="playlist-spotify-badge">Spotify</span>
+          `;
+
+          const artist = document.createElement('div');
+          artist.className = 'track-artist';
+          artist.textContent = track.artist;
+
+          link.appendChild(name);
+          link.appendChild(artist);
+          info.appendChild(link);
+
+          const meta = document.createElement('div');
+          meta.className = 'track-meta';
+          meta.innerHTML = `
+            <span>${track.duration}</span>
+            <span class="track-year">${track.year}</span>
+          `;
+
+          trackEl.appendChild(number);
+          trackEl.appendChild(emoji);
+          trackEl.appendChild(info);
+          trackEl.appendChild(meta);
+
+          trackEl.addEventListener('click', function(e) {
+            if (!e.target.closest('.track-link')) {
+              window.open(track.url, '_blank');
+            }
+          });
+
+          container.appendChild(trackEl);
+        });
+
+        const footer = document.createElement('div');
+        footer.className = 'playlist-footer';
+        footer.innerHTML = `
+          🎶 Наша музыкальная история
+          <span class="heart">♥</span>
+        `;
+        container.appendChild(footer);
+      }
+
+      // =============================================
+      // 8. ОТРИСОВКА ВИКТОРИНЫ
+      // =============================================
+      let quizScore = 0;
+
+      function renderQuiz(container) {
+        container.innerHTML = '';
+
+        const intro = document.createElement('div');
+        intro.className = 'quiz-intro';
+        intro.innerHTML = `
+          🧠 <strong>Проверь, как хорошо ты меня помнишь!</strong>
+        `;
+        container.appendChild(intro);
+
+        quizScore = 0;
+
+        quizQuestions.forEach((q, qIndex) => {
+          const qEl = document.createElement('div');
+          qEl.className = 'quiz-question';
+          qEl.dataset.qIndex = qIndex;
+
+          const number = document.createElement('div');
+          number.className = 'q-number';
+          number.textContent = `Вопрос ${qIndex + 1} из ${quizQuestions.length}`;
+
+          const text = document.createElement('div');
+          text.className = 'q-text';
+          text.textContent = q.question;
+
+          const optionsContainer = document.createElement('div');
+          optionsContainer.className = 'quiz-options';
+
+          q.options.forEach((option, oIndex) => {
+            const btn = document.createElement('button');
+            btn.className = 'q-option';
+            btn.textContent = option;
+            btn.dataset.qIndex = qIndex;
+            btn.dataset.optIndex = oIndex;
+
+            btn.addEventListener('click', function(e) {
+              e.stopPropagation();
+              if (this.disabled) return;
+              handleQuizAnswer(qIndex, oIndex, container);
+            });
+
+            optionsContainer.appendChild(btn);
+          });
+
+          qEl.appendChild(number);
+          qEl.appendChild(text);
+          qEl.appendChild(optionsContainer);
+          container.appendChild(qEl);
+        });
+
+        // Результат
+        const resultEl = document.createElement('div');
+        resultEl.className = 'quiz-result';
+        resultEl.id = 'quizResult';
+        resultEl.innerHTML = `
+          <div class="score">0 / 5</div>
+          <div class="final-message">Нажми на ответы, чтобы начать ✨</div>
+        `;
+        container.appendChild(resultEl);
+
+        // Кнопка сброса
+        const resetBtn = document.createElement('button');
+        resetBtn.className = 'quiz-reset-btn';
+        resetBtn.textContent = '🔄 начать заново';
+        resetBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          renderQuiz(container);
+        });
+        container.appendChild(resetBtn);
+      }
+
+      function handleQuizAnswer(qIndex, optIndex, container) {
+        const question = quizQuestions[qIndex];
+        const qEl = container.querySelectorAll('.quiz-question')[qIndex];
+        const options = qEl.querySelectorAll('.q-option');
+
+        if (options[0].disabled) return;
+
+        const isCorrect = optIndex === question.correct;
+
+        options.forEach((btn, idx) => {
+          btn.disabled = true;
+          if (idx === question.correct) {
+            btn.classList.add('show-correct');
+          }
+          if (idx === optIndex && !isCorrect) {
+            btn.classList.add('wrong');
+          }
+          if (idx === optIndex && isCorrect) {
+            btn.classList.add('correct');
+          }
+        });
+
+        if (isCorrect) {
+          quizScore++;
+        }
+
+        const resultEl = document.getElementById('quizResult');
+        if (resultEl) {
+          const scoreEl = resultEl.querySelector('.score');
+          const msgEl = resultEl.querySelector('.final-message');
+          if (scoreEl) {
+            scoreEl.textContent = `${quizScore} / ${quizQuestions.length}`;
+          }
+          if (msgEl) {
+            if (quizScore === quizQuestions.length) {
+              msgEl.innerHTML = `
+                🎉 <strong>Ты идеально помнишь всё!</strong> 🎉<br>
+                <span style="font-size:14px; color:#8b6b65;">Ты знаешь меня лучше всех ❤️</span>
+                <span class="heart-big">💕</span>
+              `;
+            } else if (quizScore >= 4) {
+              msgEl.innerHTML = `
+                🌟 <strong>Почти идеально!</strong> 🌟<br>
+                <span style="font-size:14px; color:#8b6b65;">Ты очень хорошо меня помнишь! ❤️</span>
+              `;
+            } else if (quizScore >= 3) {
+              msgEl.innerHTML = `
+                😊 <strong>Неплохо!</strong> 😊<br>
+                <span style="font-size:14px; color:#8b6b65;">Но мы можем вспомнить ещё больше моментов! 💕</span>
+              `;
+            } else {
+              msgEl.innerHTML = `
+                🤗 <strong>Ничего страшного!</strong> 🤗<br>
+                <span style="font-size:14px; color:#8b6b65;">Давай ещё раз проверим себя вместе! 💕</span>
+              `;
+            }
+          }
+        }
+      }
+
+      // =============================================
+      // 9. ФУНКЦИЯ ОТКРЫТИЯ МОДАЛКИ
+      // =============================================
+      function openDayModal(dayNumber) {
+        const data = daysData[dayNumber];
+        if (!data) return;
+
+        modalTitle.innerHTML = `${data.title} <span>наша история</span>`;
+
+        modalGallery.innerHTML = '';
+        if (data.photos && data.photos.length > 0) {
+          modalGallery.classList.remove('hidden');
+          data.photos.forEach((photoSrc) => {
+            const img = document.createElement('img');
+            img.className = 'gallery-item';
+            if (data.isCoupon && data.photos.length === 1) {
+              img.classList.add('coupon-large');
+            }
+            img.src = photoSrc;
+            img.alt = 'фото';
+            img.onerror = function() {
+              this.style.background = '#f5e3de';
+              this.style.backgroundImage = 'radial-gradient(circle at 30% 30%, #f1ded9, #faeae6)';
+              this.alt = 'фото не загружено';
+            };
+            modalGallery.appendChild(img);
+          });
+        } else {
+          modalGallery.classList.add('hidden');
+        }
+
+        modalExtra.innerHTML = '';
+
+        if (data.isPlaylist) {
+          const playlistContainer = document.createElement('div');
+          playlistContainer.className = 'playlist-container';
+          renderPlaylist(playlistContainer);
+          modalExtra.appendChild(playlistContainer);
+          modalMessage.classList.remove('hidden-message');
+        }
+
+        if (data.isQuest) {
+          const questContainer = document.createElement('div');
+          questContainer.className = 'game-container';
+          questState.tasks.forEach(t => t.done = false);
+          questState.allDone = false;
+          renderQuest(questContainer);
+          modalExtra.appendChild(questContainer);
+          modalMessage.classList.add('hidden-message');
+        }
+
+        if (data.isQuiz) {
+          const quizContainer = document.createElement('div');
+          quizContainer.className = 'quiz-container';
+          renderQuiz(quizContainer);
+          modalExtra.appendChild(quizContainer);
+          modalMessage.classList.remove('hidden-message');
+        }
+
+        let messageText = data.message;
+        if (data.isCoupon) {
+          modalMessage.innerHTML = `<span style="display:block; margin-bottom: 6px;">${messageText}</span><span class="coupon-badge">🎟️ купон</span>`;
+          modalMessage.classList.remove('hidden-message');
+        } else if (data.isQuest) {
+          modalMessage.innerHTML = '';
+        } else if (data.isPlaylist || data.isQuiz) {
+          modalMessage.innerHTML = messageText;
+          modalMessage.classList.remove('hidden-message');
+        } else {
+          modalMessage.innerHTML = messageText;
+          modalMessage.classList.remove('hidden-message');
+        }
+
+        modalOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      // =============================================
+      // 10. ЗАКРЫТИЕ
+      // =============================================
+      function closeModal() {
+        modalOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+        modalExtra.innerHTML = '';
+        modalMessage.classList.remove('hidden-message');
+      }
+
+      modalClose.addEventListener('click', closeModal);
+
+      modalOverlay.addEventListener('click', function(e) {
+        if (e.target === modalOverlay) {
+          closeModal();
+        }
+      });
+
+      window.addEventListener('popstate', function() {
+        if (modalOverlay.classList.contains('active')) {
+          closeModal();
+        }
+      });
+
+      dayButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          const day = parseInt(this.dataset.day, 10);
+          if (day >= 1 && day <= 10) {
+            openDayModal(day);
+          }
+        });
+      });
+
+      // =============================================
+      // 11. СВАЙП ДЛЯ ЗАКРЫТИЯ
+      // =============================================
+      let startY = 0;
+      const modalContent = document.getElementById('modalContent');
+      modalContent.addEventListener('touchstart', function(e) {
+        startY = e.touches[0].clientY;
+      }, { passive: true });
+
+      modalContent.addEventListener('touchmove', function(e) {
+        const deltaY = e.touches[0].clientY - startY;
+        if (deltaY > 80 && modalContent.scrollTop === 0) {
+          closeModal();
+        }
+      }, { passive: true });
+
+      console.log('💕 Для любимого — готово!');
+    })();
+  </script>
+</body>
+</html>
